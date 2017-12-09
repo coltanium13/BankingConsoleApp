@@ -32,20 +32,22 @@ namespace BankingConsoleApp.DataLayer
             return bankAccountCache;
         }
 
-        public bool AddBankAccount(string Name)
+        public bool AddBankAccount(BankAccount account)
         {
-            BankAccount newAccount = new BankAccount();
-
             bool success = false;
-            if (!string.IsNullOrEmpty(Name))
+            if (!string.IsNullOrEmpty(account.Name))
             {
-                newAccount.Name = Name;
+                account.Name = account.Name;
+                account.Id = this.bankAccountCache.Count() > 0 ? this.bankAccountCache.Max(acct => acct.Id) + 1 : 1;
 
-                this.bankAccountCache.Add(newAccount);
+                this.bankAccountCache.Add(account);
                 success = true;
             }
             else
+            {
                 success = false;
+                Console.WriteLine("Bank Account Creation Failed.");
+            }
 
             return success;
         }

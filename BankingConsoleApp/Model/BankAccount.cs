@@ -19,7 +19,9 @@ namespace BankingConsoleApp.Model
         {
             if (!string.IsNullOrEmpty(name))
             {
-
+                this.Id = 0;
+                this.Name = name;
+                this.Balance = 0.0m;
             }
         }
 
