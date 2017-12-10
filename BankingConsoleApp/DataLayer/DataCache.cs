@@ -87,7 +87,7 @@ namespace BankingConsoleApp.DataLayer
             return success;
         }
 
-        public bool Withdrawl(int accountId, decimal amount)
+        public bool Withdrawl(int accountId, decimal withdrawlAmount)
         {
             bool success = false;
             
@@ -95,9 +95,17 @@ namespace BankingConsoleApp.DataLayer
             {
                 if (bankAccountCache.Count > 0)
                 {
-                    decimal balance = bankAccountCache.Where(account => account.Id == accountId).Select(a => a.Balance).FirstOrDefault();
-                    balance -= amount;
-                    success = true;
+                    BankAccount account = bankAccountCache.Where(acct => acct.Id == accountId).Select(a => a).FirstOrDefault();
+                    if (account.Balance > withdrawlAmount)
+                    {
+                        account.Balance -= withdrawlAmount;
+                        success = true;
+                    }
+                    else
+                    {
+                        success = false;
+                    }
+                    
                 }
             }
             catch (Exception ex)

@@ -45,8 +45,6 @@ namespace BankingConsoleApp
         #region Console Selection Switch
         private static void MainCall(int option)
         {
-            int result = 0;
-            int empId1 = 0;
             switch (option)
             {
                 case 1: //1. Select a Bank Account to Use
@@ -59,15 +57,7 @@ namespace BankingConsoleApp
                     Deposite();
                     break;
                 case 4: //4. Make a Withdrawl
-                    Console.WriteLine("Enter EmployeeId which you want to delete:");
-                    empId1 = Convert.ToInt32(Console.ReadLine());
-                    //result = DeleteEmployee(empId1);
-                    if (result == 1)
-                        Console.WriteLine("Employee deleted");
-                    else
-                        Console.WriteLine("Employee with ID:" + empId1 + " not found");
-                    //option1 = DisplayMainMenu();
-                    //MainCall(option1);
+                    Withdrawl();
                     break;
                 case 5: //5. Exit
                     Console.WriteLine("Thanks for banking with Mo'Money Bank!");
@@ -77,6 +67,8 @@ namespace BankingConsoleApp
                     int option1 = DisplayMainMenu();
                     MainCall(option1);
                     break;
+
+                    //TODO: Add RemoveAccount();
             }
         }
         #endregion
@@ -108,9 +100,9 @@ namespace BankingConsoleApp
                     accountId = Convert.ToInt32(Console.ReadLine());
                     switchToBankAccount(accountId);
                 }
-                catch
+                catch(Exception ex)
                 {
-                    Console.WriteLine("Invalid Account! Returning to Main Menu.");
+                    Console.WriteLine($"Invalid Account Number: {ex.Message}");
                 }
                 option1 = DisplayMainMenu();
                 MainCall(option1);
@@ -154,19 +146,27 @@ namespace BankingConsoleApp
 
         private static void Deposite()
         {
+            decimal depositeAmount;
             Console.WriteLine("");
             if(activeAccount != null)
             {
                 Console.WriteLine("Enter the amount you wish to deposite...");
-                decimal depositeAmount = Convert.ToDecimal(Console.ReadLine());
-
-                if (dataCacheInstance.Deposite(activeAccount.Id, depositeAmount))
+                try
                 {
-                    Console.WriteLine($"You deposited {depositeAmount}.");
-                    Console.WriteLine($"The new balace for {activeAccount.Name} is ${activeAccount.Balance}");
+                    depositeAmount = Convert.ToDecimal(Console.ReadLine());
+
+                    if (dataCacheInstance.Deposite(activeAccount.Id, depositeAmount))
+                    {
+                        Console.WriteLine($"You deposited {depositeAmount}.");
+                        Console.WriteLine($"The new balace for {activeAccount.Name} is ${String.Format("{0:C}", activeAccount.Balance)}");
+                    }
+                    else
+                        Console.WriteLine("Something went wrong with the deposite...");
                 }
-                else
-                    Console.WriteLine("Something went wrong with the deposite...");
+                catch(Exception ex)
+                {
+                    Console.WriteLine($"Enter a correct deposite amount: {ex.Message}");
+                }
             }
             else
             {
@@ -180,7 +180,35 @@ namespace BankingConsoleApp
 
         private static void Withdrawl()
         {
+            Console.WriteLine("");
+            decimal withdrawlAmount;
+            if (activeAccount != null)
+            {
+                Console.WriteLine("Enter the amount you wish to withdrawl...");
+                try
+                {
+                    withdrawlAmount = Convert.ToDecimal(Console.ReadLine());
 
+                    if (dataCacheInstance.Withdrawl(activeAccount.Id, withdrawlAmount))
+                    {
+                        Console.WriteLine($"You withdrew {withdrawlAmount}.");
+                        Console.WriteLine($"The new balace for {activeAccount.Name} is ${String.Format("{0:C}", activeAccount.Balance)}");
+                    }
+                    else
+                        Console.WriteLine($"You can not overdraft... sorry brah");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Enter a correct withdrawl amount: {ex.Message}");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Please select an account before withdrawling money. Returning to main menu.");
+            }
+
+            Int32 option1 = DisplayMainMenu();
+            MainCall(option1);
         }
         #endregion
     }
