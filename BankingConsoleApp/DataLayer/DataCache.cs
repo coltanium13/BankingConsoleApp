@@ -64,7 +64,7 @@ namespace BankingConsoleApp.DataLayer
             }
             catch(Exception ex)
             {
-                Console.WriteLine($"Could not find balance for bank account with Id{accountId}");
+                Console.WriteLine($"Could not find balance for bank account with Id {accountId}");
             }
             return balance;
         }
@@ -76,8 +76,7 @@ namespace BankingConsoleApp.DataLayer
             {
                 if (bankAccountCache.Count > 0)
                 {
-                    decimal balance = bankAccountCache.Where(account => account.Id == accountId).Select(a => a.Balance).FirstOrDefault();
-                    balance += amount;
+                    decimal balance = bankAccountCache.Where(account => account.Id == accountId).Select(a => a.Balance += amount).FirstOrDefault();
                     success = true;
                 }
             }

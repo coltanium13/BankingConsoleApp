@@ -56,9 +56,7 @@ namespace BankingConsoleApp
                     AddAccount();
                     break;
                 case 3: //3. Make a Deposite
-                    Console.WriteLine("Enter EmployeeId which you want to update:");
-                    empId1 = Convert.ToInt32(Console.ReadLine());
-                    //result = update(empId1);
+                    Deposite();
                     break;
                 case 4: //4. Make a Withdrawl
                     Console.WriteLine("Enter EmployeeId which you want to delete:");
@@ -152,6 +150,37 @@ namespace BankingConsoleApp
                 Console.WriteLine("The Account creation failed.. Returning to main menu");
             Int32 option1 = DisplayMainMenu();
             MainCall(option1);
+        }
+
+        private static void Deposite()
+        {
+            Console.WriteLine("");
+            if(activeAccount != null)
+            {
+                Console.WriteLine("Enter the amount you wish to deposite...");
+                decimal depositeAmount = Convert.ToDecimal(Console.ReadLine());
+
+                if (dataCacheInstance.Deposite(activeAccount.Id, depositeAmount))
+                {
+                    Console.WriteLine($"You deposited {depositeAmount}.");
+                    Console.WriteLine($"The new balace for {activeAccount.Name} is ${activeAccount.Balance}");
+                }
+                else
+                    Console.WriteLine("Something went wrong with the deposite...");
+            }
+            else
+            {
+                Console.WriteLine("Please select an account before depositing money. Returning to main menu.");
+            }
+
+            Int32 option1 = DisplayMainMenu();
+            MainCall(option1);
+
+        }
+
+        private static void Withdrawl()
+        {
+
         }
         #endregion
     }

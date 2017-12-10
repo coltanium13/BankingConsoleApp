@@ -25,21 +25,21 @@ namespace BankingConsoleApp.Model
             }
         }
 
-        private static DataCache dataCacheInstance = DataCache.Instance;
+        private DataCache dataCacheInstance = DataCache.Instance;
 
         public decimal GetBalance()
         {
-            return dataCacheInstance.GetBalance(this.Id);
+            return this.dataCacheInstance.GetBalance(this.Id);
         }
 
         public bool Deposit(decimal amount)
         {
-            return dataCacheInstance.Deposite(this.Id, amount);
+            return this.dataCacheInstance.Deposite(this.Id, amount);
         }
 
         public bool Withdrawl(decimal amount)
         {
-            return dataCacheInstance.Withdrawl(this.Id, amount);
+            return this.dataCacheInstance.Withdrawl(this.Id, amount);
         }
     }
 }
