@@ -68,7 +68,7 @@ namespace BankingConsoleApp.DataLayer
             return balance;
         }
 
-        public bool Deposite(int accountId, decimal amount)
+        public bool Deposit(int accountId, decimal amount)
         {
             bool success = false;
             BankAccount account;
@@ -78,7 +78,7 @@ namespace BankingConsoleApp.DataLayer
                 {
                     account = bankAccountCache.Where(acct => acct.Id == accountId).FirstOrDefault();
                     account.Balance += amount;
-                    account.TransactionLog.Add($"A deposite of ${amount} was made at {DateTime.Now}");
+                    account.TransactionLog.Add($"A deposit of {String.Format("{0:C}", amount)} was made at {DateTime.Now}");
                     success = true;
                 }
             }
@@ -101,7 +101,7 @@ namespace BankingConsoleApp.DataLayer
                     if (account.Balance > withdrawlAmount)
                     {
                         account.Balance -= withdrawlAmount;
-                        account.TransactionLog.Add($"A withdrawl of ${withdrawlAmount} was made at {DateTime.Now}");
+                        account.TransactionLog.Add($"A withdrawl of {String.Format("{0:C}", withdrawlAmount)} was made at {DateTime.Now}");
                         success = true;
                     }
                     else

@@ -22,10 +22,10 @@ namespace BankingConsoleApp
         #region Console Main Menu
         private static int DisplayMainMenu()
         {
-            Console.WriteLine(string.Format("\nSelect any option:   Active Account: {0}", activeAccount == null ? "n/a" : activeAccount.Name));
+            Console.WriteLine(string.Format("\nSelect any option:   Active Account: {0}", activeAccount.Name == null ? "n/a" : activeAccount.Name));
             Console.WriteLine("1. Select a Bank Account to Use");
             Console.WriteLine("2. Add Bank Account");
-            Console.WriteLine("3. Make a Deposite");
+            Console.WriteLine("3. Make a Deposit");
             Console.WriteLine("4. Make a Withdrawl");
             Console.WriteLine("5. Check Balance");
             Console.WriteLine("6. View Transaction History");
@@ -55,8 +55,8 @@ namespace BankingConsoleApp
                 case 2: //2. Add Bank Account
                     AddAccount();
                     break;
-                case 3: //3. Make a Deposite
-                    Deposite();
+                case 3: //3. Make a Deposit
+                    Deposit();
                     break;
                 case 4: //4. Make a Withdrawl
                     Withdrawl();
@@ -75,10 +75,6 @@ namespace BankingConsoleApp
                     int option1 = DisplayMainMenu();
                     MainCall(option1);
                     break;
-
-                    //TODO: Add Login();
-                    //TODO: Add CheckBalance();
-                    //TODO: Add ViewTransactionLog()
             }
         }
         #endregion
@@ -112,6 +108,7 @@ namespace BankingConsoleApp
                 }
                 catch(Exception ex)
                 {
+                    //they entered something other than an int. Account number must be an int
                     Console.WriteLine($"Invalid Account Number: {ex.Message}");
                 }
                 option1 = DisplayMainMenu();
@@ -184,32 +181,32 @@ namespace BankingConsoleApp
             }
             else
                 Console.WriteLine("The Account creation failed.. Returning to main menu");
-            Int32 option1 = DisplayMainMenu();
+            int option1 = DisplayMainMenu();
             MainCall(option1);
         }
 
-        private static void Deposite()
+        private static void Deposit()
         {
-            decimal depositeAmount;
+            decimal depositAmount;
             Console.WriteLine("");
             if(activeAccount != null)
             {
-                Console.WriteLine("Enter the amount you wish to deposite...");
+                Console.WriteLine("Enter the amount you wish to deposit...");
                 try
                 {
-                    depositeAmount = Convert.ToDecimal(Console.ReadLine());
+                    depositAmount = Convert.ToDecimal(Console.ReadLine());
 
-                    if (dataCacheInstance.Deposite(activeAccount.Id, depositeAmount))
+                    if (dataCacheInstance.Deposit(activeAccount.Id, depositAmount))
                     {
-                        Console.WriteLine($"You deposited {depositeAmount}.");
-                        Console.WriteLine($"The new balace for {activeAccount.Name} is ${String.Format("{0:C}", activeAccount.Balance)}");
+                        Console.WriteLine($"You deposited {depositAmount}.");
+                        Console.WriteLine($"The new balace for {activeAccount.Name} is {String.Format("{0:C}", activeAccount.Balance)}");
                     }
                     else
-                        Console.WriteLine("Something went wrong with the deposite...");
+                        Console.WriteLine("Something went wrong with the deposit...");
                 }
                 catch(Exception ex)
                 {
-                    Console.WriteLine($"Enter a correct deposite amount: {ex.Message}");
+                    Console.WriteLine($"Enter a correct deposit amount: {ex.Message}");
                 }
             }
             else
@@ -217,7 +214,7 @@ namespace BankingConsoleApp
                 Console.WriteLine("Please select an account before depositing money. Returning to main menu.");
             }
 
-            Int32 option1 = DisplayMainMenu();
+            int option1 = DisplayMainMenu();
             MainCall(option1);
 
         }
@@ -236,7 +233,7 @@ namespace BankingConsoleApp
                     if (dataCacheInstance.Withdrawl(activeAccount.Id, withdrawlAmount))
                     {
                         Console.WriteLine($"You withdrew {withdrawlAmount}.");
-                        Console.WriteLine($"The new balace for {activeAccount.Name} is ${String.Format("{0:C}", activeAccount.Balance)}");
+                        Console.WriteLine($"The new balace for {activeAccount.Name} is {String.Format("{0:C}", activeAccount.Balance)}");
                     }
                     else
                         Console.WriteLine($"You can not overdraft... sorry brah");
@@ -251,18 +248,45 @@ namespace BankingConsoleApp
                 Console.WriteLine("Please select an account before withdrawling money. Returning to main menu.");
             }
 
-            Int32 option1 = DisplayMainMenu();
+            int option1 = DisplayMainMenu();
             MainCall(option1);
         }
 
+        /// <summary>
+        /// Shows the balance for the active account.
+        /// </summary>
         public static void CheckBalance()
         {
+            if(activeAccount.Name != null)
+            {
+                Console.WriteLine($"Your current balance for account {activeAccount.Name} is {String.Format("{0:C}", activeAccount.Balance)}");
+            }
+            else
+            {
+                Console.WriteLine("Please create an account. Returning to Main menu.");
+            }
 
+            int option1 = DisplayMainMenu();
+            MainCall(option1);
         }
 
+        /// <summary>
+        /// Shows the list of transaction log history for the active account
+        /// </summary>
         public static void ViewTransactionLog()
         {
+            if (activeAccount.Name != null)
+            {
+                Console.WriteLine($"Transaction History for account {activeAccount.Name}: ");
+                foreach(string log in activeAccount.TransactionLog) { Console.WriteLine(log); };
+            }
+            else
+            {
+                Console.WriteLine("Please create an account. Returning to Main menu.");
+            }
 
+            int option1 = DisplayMainMenu();
+            MainCall(option1);
         }
         #endregion
     }

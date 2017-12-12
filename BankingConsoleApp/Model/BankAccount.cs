@@ -39,7 +39,7 @@ namespace BankingConsoleApp.Model
 
         public bool Deposit(decimal amount)
         {
-            return this.dataCacheInstance.Deposite(this.Id, amount);
+            return this.dataCacheInstance.Deposit(this.Id, amount);
         }
 
         public bool Withdrawl(decimal amount)
