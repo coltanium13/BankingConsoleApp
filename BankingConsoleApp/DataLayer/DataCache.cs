@@ -48,7 +48,6 @@ namespace BankingConsoleApp.DataLayer
                 success = false;
                 Console.WriteLine("Bank Account Creation Failed.");
             }
-
             return success;
         }
 
@@ -72,17 +71,20 @@ namespace BankingConsoleApp.DataLayer
         public bool Deposite(int accountId, decimal amount)
         {
             bool success = false;
+            BankAccount account;
             try
             {
                 if (bankAccountCache.Count > 0)
                 {
-                    decimal balance = bankAccountCache.Where(account => account.Id == accountId).Select(a => a.Balance += amount).FirstOrDefault();
+                    account = bankAccountCache.Where(acct => acct.Id == accountId).FirstOrDefault();
+                    account.Balance += amount;
+                    account.TransactionLog.Add($"A deposite of ${amount} was made at {DateTime.Now}");
                     success = true;
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Could not find balance for bank account with Id{accountId}");
+                Console.WriteLine($"Could not find balance for bank account with Id {accountId}");
             }
             return success;
         }
@@ -90,29 +92,40 @@ namespace BankingConsoleApp.DataLayer
         public bool Withdrawl(int accountId, decimal withdrawlAmount)
         {
             bool success = false;
-            
+            BankAccount account;
             try
             {
                 if (bankAccountCache.Count > 0)
                 {
-                    BankAccount account = bankAccountCache.Where(acct => acct.Id == accountId).Select(a => a).FirstOrDefault();
+                     account = bankAccountCache.Where(acct => acct.Id == accountId).Select(a => a).FirstOrDefault();
                     if (account.Balance > withdrawlAmount)
                     {
                         account.Balance -= withdrawlAmount;
+                        account.TransactionLog.Add($"A withdrawl of ${withdrawlAmount} was made at {DateTime.Now}");
                         success = true;
                     }
                     else
                     {
                         success = false;
                     }
-                    
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Could not find balance for bank account with Id{accountId}");
+                Console.WriteLine($"Could not find balance for bank account with Id {accountId}");
             }
             return success;
+        }
+
+        /// <summary>
+        /// Returns the transaction log list for a bank account
+        /// </summary>
+        /// <param name="bankAccountId"></param>
+        /// <returns></returns>
+        public List<string> GetTransactionLogHistory(int bankAccountId)
+        {
+            BankAccount account = bankAccountCache.Where(acct => acct.Id == bankAccountId).FirstOrDefault();
+            return account.TransactionLog;
         }
         #endregion
     }

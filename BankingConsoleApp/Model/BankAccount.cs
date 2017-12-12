@@ -11,17 +11,22 @@ namespace BankingConsoleApp.Model
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public string Password { get; set; }
         public decimal Balance { get; set; }
+        public List<string> TransactionLog { get; set; }
 
         public BankAccount() { }
 
-        public BankAccount(string name)
+        public BankAccount(string name, string password)
         {
             if (!string.IsNullOrEmpty(name))
             {
                 this.Id = 0;
                 this.Name = name;
+                this.Password = password;
                 this.Balance = 0.0m;
+                this.TransactionLog = new List<string>();
+                this.TransactionLog.Add($"Account {name} was created at {DateTime.Now}.");
             }
         }
 

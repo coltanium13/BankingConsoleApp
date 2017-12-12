@@ -27,7 +27,9 @@ namespace BankingConsoleApp
             Console.WriteLine("2. Add Bank Account");
             Console.WriteLine("3. Make a Deposite");
             Console.WriteLine("4. Make a Withdrawl");
-            Console.WriteLine("5. Exit");
+            Console.WriteLine("5. Check Balance");
+            Console.WriteLine("6. View Transaction History");
+            Console.WriteLine("7. Exit");
 
             Int32 option = 0;
             try
@@ -59,7 +61,13 @@ namespace BankingConsoleApp
                 case 4: //4. Make a Withdrawl
                     Withdrawl();
                     break;
-                case 5: //5. Exit
+                case 5: //Check Balance
+                    CheckBalance();
+                    break;
+                case 6: //View Transaction Log
+                    ViewTransactionLog();
+                    break;
+                case 7: //Exit
                     Console.WriteLine("Thanks for banking with Mo'Money Bank!");
                     break;
                 default:
@@ -68,7 +76,9 @@ namespace BankingConsoleApp
                     MainCall(option1);
                     break;
 
-                    //TODO: Add RemoveAccount();
+                    //TODO: Add Login();
+                    //TODO: Add CheckBalance();
+                    //TODO: Add ViewTransactionLog()
             }
         }
         #endregion
@@ -91,7 +101,7 @@ namespace BankingConsoleApp
             {
                 foreach (BankAccount account in dataCacheInstance.GetBankAccounts(null))
                 {
-                    Console.WriteLine($"Account Id: {account.Id}    Account Name: {account.Name}" );
+                    Console.WriteLine($"Account Number: {account.Id}    Account Name: {account.Name}" );
                     Console.WriteLine("");
                 }
                 Console.WriteLine("Type in the Account Number you wish to use...");
@@ -116,14 +126,45 @@ namespace BankingConsoleApp
         private static void switchToBankAccount(int accountId)
         {
             BankAccount selectedAccount = dataCacheInstance.GetBankAccounts(accountId).FirstOrDefault();
+            bool validated = false;
 
-            activeAccount = selectedAccount ?? null;
-            if (activeAccount != null)
-                Console.WriteLine($"The Active Bank Account is {activeAccount.Name}");
+            //verify the password for the account trying to be selected
+            if (selectedAccount != null)
+            {
+                Console.WriteLine($"Enter the password for {selectedAccount.Name}...");
+                string password = Console.ReadLine();
+                validated = validatePassword(selectedAccount, password);
+                if (validated)
+                {
+                    Console.WriteLine($"The Active Bank Account is {activeAccount.Name}");
+                    activeAccount = selectedAccount;
+                }
+                else
+                {
+                    Console.WriteLine($"The password for account {selectedAccount.Name} was Invalid. Returning to Main menu.");
+                }
+            }
+            //The account Id trying to be selected was not found.
             else
             {
-                Console.WriteLine($"The account Id {accountId} is invalid. Returning to Main menu.");
+                Console.WriteLine($"The account number {accountId} was not found. Returning to Main menu.");
             }
+        }
+
+        /// <summary>
+        /// Validate the password for a bank account.
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
+        private static bool validatePassword(BankAccount account, string password)
+        {
+            bool valid = false;
+            if (account.Password == password)
+                valid = true;
+            else
+                valid = false;
+            return valid;
         }
 
         private static void AddAccount()
@@ -131,7 +172,10 @@ namespace BankingConsoleApp
             Console.WriteLine("");
             Console.WriteLine("Enter the Name you want to call the account");
             string accountName = Console.ReadLine();
-            BankAccount newAccount = new BankAccount(accountName);
+            Console.WriteLine("Enter a password for the account");
+            string password = Console.ReadLine(); ;
+            //TODO: Add prompt to enter password for account.
+            BankAccount newAccount = new BankAccount(accountName, password);
             if (dataCacheInstance.AddBankAccount(newAccount))
             {
                 Console.Write($"You created the account called {newAccount.Name}");
@@ -209,6 +253,16 @@ namespace BankingConsoleApp
 
             Int32 option1 = DisplayMainMenu();
             MainCall(option1);
+        }
+
+        public static void CheckBalance()
+        {
+
+        }
+
+        public static void ViewTransactionLog()
+        {
+
         }
         #endregion
     }
