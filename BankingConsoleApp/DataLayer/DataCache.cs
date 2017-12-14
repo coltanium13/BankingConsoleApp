@@ -9,10 +9,12 @@ namespace BankingConsoleApp.DataLayer
 {
     public sealed class DataCache
     {
+        
         private static readonly DataCache instance = new DataCache();
 
         private DataCache() { }
 
+        //Singleton instance
         public static DataCache Instance
         {
             get
