@@ -22,7 +22,7 @@ namespace BankingConsoleApp
         #region Console Main Menu
         private static int DisplayMainMenu()
         {
-            Console.WriteLine(string.Format("\nSelect any option:   Active Account: {0}", activeAccount.Name == null ? "n/a" : activeAccount.Name));
+            Console.WriteLine(string.Format("\nSelect any option:   Active Account: {0}", activeAccount.Name ?? "n/a"));
             Console.WriteLine("1. Select a Bank Account to Use");
             Console.WriteLine("2. Add Bank Account");
             Console.WriteLine("3. Make a Deposit");
@@ -164,6 +164,9 @@ namespace BankingConsoleApp
             return valid;
         }
 
+        /// <summary>
+        /// Creates and adds the bank account to the datacache
+        /// </summary>
         private static void AddAccount()
         {
             Console.WriteLine("");
@@ -185,6 +188,9 @@ namespace BankingConsoleApp
             MainCall(option1);
         }
 
+        /// <summary>
+        /// Deposite money into the active bank account
+        /// </summary>
         private static void Deposit()
         {
             decimal depositAmount;
@@ -219,6 +225,9 @@ namespace BankingConsoleApp
 
         }
 
+        /// <summary>
+        /// Withdrawl money from the active bank account. Overdraft is not allowed.
+        /// </summary>
         private static void Withdrawl()
         {
             Console.WriteLine("");
